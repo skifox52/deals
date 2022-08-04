@@ -1,14 +1,17 @@
 const puppeteer = require("puppeteer")
 ;(async () => {
   try {
-    const browser = await puppeteer.launch({ headless: false, slowMo: 250 })
+    const browser = await puppeteer.launch({
+      headless: false,
+      devtools: false,
+      ignoreHTTPSErrors: true,
+    })
     const page = await browser.newPage()
     let truc = []
     for (let y = 1; y < 11; y++) {
       await page.goto(`https://www.dealabs.com/groupe/pc-portables?page=${y}`, {
-        waitUntil: "domcontentloaded",
+        waitUntil: "networkidle2",
       })
-      await page.waitForNavigation({ waitUntil: "networkidle0" })
       let deals = await page.evaluate(() =>
         Array.from(
           document.querySelectorAll(
@@ -25,7 +28,9 @@ const puppeteer = require("puppeteer")
       })
     }
     await browser.close()
-    const result = truc.filter((truc) => truc.Prix.split("€")[0] < 600)
+    const result = truc.filter(
+      (truc) => parseInt(truc.Prix.split("€")[0]) < 600
+    )
     console.log(result)
   } catch (error) {
     console.log(error)
@@ -40,6 +45,7 @@ const puppeteer = require("puppeteer")
 // const text = await await (
 //   await element.getProperty("textContent")
 // ).jsonValue()
+//await page.waitForNavigation({ waitUntil: "networkidle0" })
 // console.log(text)
 // await page.screenshot({
 //   path: `${Date.now().toString()}.png`,
