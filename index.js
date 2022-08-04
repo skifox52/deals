@@ -9,6 +9,7 @@ const puppeteer = require("puppeteer")
     const page = await browser.newPage()
     let truc = []
     for (let y = 1; y < 11; y++) {
+      //You can change the url here
       await page.goto(`https://www.dealabs.com/groupe/pc-portables?page=${y}`, {
         waitUntil: "networkidle2",
       })
@@ -29,25 +30,10 @@ const puppeteer = require("puppeteer")
     }
     await browser.close()
     const result = truc.filter(
-      (truc) => parseInt(truc.Prix.split("€")[0]) < 600
+      (truc) => parseInt(truc.Prix.split("€")[0]) < 600 //  <--- You can change the max price here
     )
     console.log(result)
   } catch (error) {
     console.log(error)
   }
 })()
-
-// await page.waitForResponse((response) => {
-//   return response.request().resourceType() === "xhr"
-// })
-// await Promise.all([page.click(".linkPlain"), page.waitForNavigation()])
-// const element = await page.$("a")
-// const text = await await (
-//   await element.getProperty("textContent")
-// ).jsonValue()
-//await page.waitForNavigation({ waitUntil: "networkidle0" })
-// console.log(text)
-// await page.screenshot({
-//   path: `${Date.now().toString()}.png`,
-//   fullPage: true,
-// })
